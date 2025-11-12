@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Favorite Car</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --brand: #000d35;
+      --accent: #f0c20c;
+      --bg: #f8f9fa;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+      background: var(--brand) !important;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.15);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      position: relative;
+      background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+      url('33.jpg') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 140px 20px;
+      overflow: hidden;
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: #f0f0f0;
+      margin-top: 15px;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    body.dark-mode .navbar {
+      background-color: #1f1f1f;
+    }
+
+    body.dark-mode .btn-primary {
+      background-color: #333333;
+      border-color: #333333;
+    }
+
+    body.dark-mode .btn-primary:hover {
+      filter: brightness(1.15);
+    }
+
+    body.dark-mode footer {
+      background-color: #1f1f1f;
+    }
+
+    body.dark-mode .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('33.jpg') center/cover no-repeat;
+    }
+
+    body.dark-mode .hero-title {
+      color: #fff;
+    }
+
+    body.dark-mode .hero-subtitle {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+ 
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="index.html">
+        <i class="bi bi-speedometer2 me-2"></i><strong>AutoCars</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainMenu">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="models.html">Models</a></li>
+          <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="index1.html">Your Favorite Car</a></li>
+          
+          <button id="modeToggle" class="btn btn-outline-light btn-sm ms-3">Dark Mode</button>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Your Favorite Car</h1>
+      <p class="hero-subtitle">Here you can see your favorite car that you've added.</p>
+    </div>
+  </header>
+
+
+  <section id="favoriteCarSection" class="container my-5">
+    <h2 class="text-center fw-bold mb-4 text-dark">Your Favorite Car</h2>
+    <div id="favoriteCar" class="card shadow-sm border-0">
+     
+    </div>
+ 
+    <button id="clearFavorite" class="btn btn-danger btn-sm mt-4" style="display:none;">Clear Favorite Car</button>
+  </section>
+
+  <footer class="mt-5 bg-dark text-light py-4">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p class="mb-2 mb-md-0">© <span id="year"></span> AutoCars. All rights reserved.</p>
+      <div class="d-flex gap-3">
+        <a href="#" class="text-decoration-none text-light">Privacy</a>
+        <a href="#" class="text-decoration-none text-light">Terms</a>
+        <a href="contact.html" class="btn btn-outline-light btn-sm">Contact Us</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      document.getElementById('modeToggle').textContent = 'Light Mode';
+    }
+
+    document.getElementById('modeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      if (document.body.classList.contains('dark-mode')) {
+        document.getElementById('modeToggle').textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.getElementById('modeToggle').textContent = 'Dark Mode';
+        localStorage.removeItem('theme');
+      }
+    });
+
+  
+    window.onload = function() {
+      const favoriteCar = JSON.parse(localStorage.getItem('favoriteCar'));
+
+      if (favoriteCar) {
+        const carHtml = `
+          <img src="${favoriteCar.image}" class="card-img-top" alt="${favoriteCar.name}" />
+          <div class="card-body">
+            <h5 class="card-title">${favoriteCar.name}</h5>
+          </div>
+        `;
+        document.getElementById('favoriteCar').innerHTML = carHtml;
+        document.getElementById('clearFavorite').style.display = 'inline-block'; 
+      } else {
+        document.getElementById('favoriteCar').innerHTML = '<p>No favorite car.</p>';
+        document.getElementById('clearFavorite').style.display = 'none'; 
+      }
+    }
+
+    
+    document.getElementById('clearFavorite').addEventListener('click', function() {
+      localStorage.removeItem('favoriteCar');
+      document.getElementById('favoriteCar').innerHTML = '<p>No favorite car.</p>';
+      document.getElementById('clearFavorite').style.display = 'none'; 
+    });
+
+    $(function(){
+      $('#year').text(new Date().getFullYear());
+    });
+  </script>
+</body>
+</html>
